@@ -13,16 +13,20 @@ const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { addToCart } = useCart();
+  const localProducts = useMemo(
+    () => JSON.parse(localStorage.getItem("pharm_local_products") || "[]"),
+    []
+  );
 
   useEffect(() => {
     api.get("/api/products")
-      .then((res) => setMedicines(res.data))
+      .then((res) => setMedicines([...localProducts, ...res.data]))
       .catch(() => {
-        setMedicines(demoProducts);
+        setMedicines([...localProducts, ...demoProducts]);
         setError("Сервер уақытша қолжетімсіз, демо каталог көрсетілді");
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [localProducts]);
 
   const categories = useMemo(() => {
     const values = [...new Set(medicines.map((m) => m.category).filter(Boolean))];

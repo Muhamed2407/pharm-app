@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import api from "../api";
 import { orderStatusLabel } from "../utils/orderStatus";
+import { demoProducts } from "../data/demoProducts";
+
+const LOCAL_PRODUCTS_KEY = "pharm_local_products";
 
 const AdminPage = () => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [demoMode, setDemoMode] = useState(false);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -17,14 +21,23 @@ const AdminPage = () => {
   const [pharmacies, setPharmacies] = useState([]);
 
   const load = useCallback(async () => {
-    const [productsRes, ordersRes, pharmaciesRes] = await Promise.all([
-      api.get("/api/admin/products"),
-      api.get("/api/admin/orders"),
-      api.get("/api/pharmacies"),
-    ]);
-    setProducts(productsRes.data);
-    setOrders(ordersRes.data);
-    setPharmacies(pharmaciesRes.data);
+    try {
+      const [productsRes, ordersRes, pharmaciesRes] = await Promise.all([
+        api.get("/api/admin/products"),
+        api.get("/api/admin/orders"),
+        api.get("/api/pharmacies"),
+      ]);
+      setDemoMode(false);
+      setProducts(productsRes.data);
+      setOrders(ordersRes.data);
+      setPharmacies(pharmaciesRes.data);
+    } catch {
+      setDemoMode(true);
+      const localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || "[]");
+      setProducts([...localProducts, ...demoProducts.slice(0, 50)]);
+      setOrders([]);
+      setPharmacies([{ id: "demo-pharmacy", name: "PharmApp Demo" }]);
+    }
   }, []);
 
   useEffect(() => {
@@ -33,18 +46,28 @@ const AdminPage = () => {
 
   const addProduct = async (e) => {
     e.preventDefault();
-    await api.post("/api/admin/products", {
+    const payload = {
+      id: `local-${Date.now()}`,
       name: form.name,
       description: form.description,
       category: form.category,
       imageUrl: form.imageUrl,
       price: Number(form.price),
       discountPrice: form.discountPrice ? Number(form.discountPrice) : undefined,
-      pharmacyId: form.pharmacyId,
+      pharmacyId: form.pharmacyId || "demo-pharmacy",
       inStock: true,
       isPromo: Boolean(form.discountPrice),
       isBestSeller: false,
-    });
+    };
+
+    if (demoMode) {
+      const localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || "[]");
+      const next = [payload, ...localProducts];
+      localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(next));
+    } else {
+      await api.post("/api/admin/products", payload);
+    }
+
     setForm({
       name: "",
       description: "",
@@ -58,7 +81,13 @@ const AdminPage = () => {
   };
 
   const removeProduct = async (id) => {
-    await api.delete(`/api/admin/products/${id}`);
+    if (demoMode) {
+      const localProducts = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || "[]");
+      const next = localProducts.filter((item) => item.id !== id);
+      localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(next));
+    } else {
+      await api.delete(`/api/admin/products/${id}`);
+    }
     await load();
   };
 
@@ -67,6 +96,7 @@ const AdminPage = () => {
       <div className="section-head">
         <h1 className="section-title">Админ панель</h1>
         <p className="section-sub">Дәрілерді басқару және тапсырыстар мониторингі</p>
+        {demoMode && <p className="section-sub">Demo режимі: қосылған дәрілер локалды сақталады</p>}
       </div>
 
       <form className="card-elevated form admin-form" onSubmit={addProduct}>
