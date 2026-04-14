@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     rootDir: server
-    buildCommand: npm install && npm run prisma:generate && npm run prisma:migrate:deploy
+    buildCommand: npm install && npm run prisma:generate && npx prisma db push && npm run prisma:seed
     startCommand: npm run start
     envVars:
       - key: DATABASE_URL
