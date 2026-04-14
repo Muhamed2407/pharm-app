@@ -437,6 +437,12 @@ button:not(.link-button) {
   min-height: 2.7em;
 }
 
+.card-pharmacy {
+  margin: 0 0 8px;
+  color: #475569;
+  font-size: 0.88rem;
+}
+
 .card-price-row {
   display: flex;
   align-items: baseline;
@@ -705,6 +711,27 @@ input[type="number"]:focus {
   padding: 22px;
 }
 
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-stat-card {
+  padding: 16px;
+}
+
+.admin-stat-label {
+  margin: 0 0 6px;
+  color: var(--muted);
+}
+
+.admin-stat-value {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
 .form-title {
   margin: 0 0 12px;
   font-size: 1.15rem;
@@ -738,6 +765,31 @@ input[type="number"]:focus {
 
 .contact-section {
   margin-bottom: 32px;
+}
+
+.pharmacy-photo-card {
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.pharmacy-photo {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.pharmacy-photo-caption {
+  padding: 14px 18px 18px;
+}
+
+.pharmacy-photo-caption h3 {
+  margin: 0 0 4px;
+}
+
+.pharmacy-photo-caption p {
+  margin: 0;
+  color: var(--muted);
 }
 
 .contact-cards {
@@ -948,6 +1000,23 @@ input[type="number"]:focus {
   color: #b91c1c;
   font-weight: 500;
   margin-top: 10px;
+}
+
+.role-choice {
+  max-width: 520px;
+  margin-bottom: 10px;
+}
+
+.role-choice-title {
+  margin: 0 0 8px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.role-choice-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .panel-order {

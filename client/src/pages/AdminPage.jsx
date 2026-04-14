@@ -4,6 +4,20 @@ import { orderStatusLabel } from "../utils/orderStatus";
 import { demoProducts } from "../data/demoProducts";
 
 const LOCAL_PRODUCTS_KEY = "pharm_local_products";
+const CATEGORY_OPTIONS = [
+  "Ауырсынуға қарсы",
+  "Температура",
+  "Витаминдер",
+  "Антибиотиктер",
+  "Жүрек",
+  "Қан қысымы",
+  "Асқазан",
+  "Аллергия",
+  "Жөтел",
+  "Тамақ ауруы",
+  "Диабет",
+  "Тері күтімі",
+];
 
 const AdminPage = () => {
   const [products, setProducts] = useState([]);
@@ -46,6 +60,12 @@ const AdminPage = () => {
 
   const addProduct = async (e) => {
     e.preventDefault();
+    const normalizedName = form.name.trim().toLowerCase();
+    if (products.some((item) => String(item.name || "").trim().toLowerCase() === normalizedName)) {
+      // Basic duplicate guard so the same medicine is not added twice.
+      alert("Бұл дәрі каталогта бар, қайталап қоспаңыз.");
+      return;
+    }
     const payload = {
       id: `local-${Date.now()}`,
       name: form.name,
@@ -98,12 +118,27 @@ const AdminPage = () => {
         <p className="section-sub">Дәрілерді басқару және тапсырыстар мониторингі</p>
         {demoMode && <p className="section-sub">Demo режимі: қосылған дәрілер локалды сақталады</p>}
       </div>
+      <section className="admin-stats">
+        <article className="card-elevated admin-stat-card">
+          <p className="admin-stat-label">Каталогтағы дәрі</p>
+          <h3 className="admin-stat-value">{products.length}</h3>
+        </article>
+        <article className="card-elevated admin-stat-card">
+          <p className="admin-stat-label">Тапсырыс саны</p>
+          <h3 className="admin-stat-value">{orders.length}</h3>
+        </article>
+      </section>
 
       <form className="card-elevated form admin-form" onSubmit={addProduct}>
         <h2 className="form-title">Жаңа дәрі</h2>
         <input className="input" placeholder="Дәрі атауы" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <input className="input" placeholder="Сипаттама" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
-        <input className="input" placeholder="Категория" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
+        <select className="input" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
+          <option value="">Категория таңдаңыз</option>
+          {CATEGORY_OPTIONS.map((item) => (
+            <option key={item} value={item}>{item}</option>
+          ))}
+        </select>
         <input className="input" placeholder="Негізгі баға (₸)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
         <input className="input" placeholder="Скидка бағасы (₸)" value={form.discountPrice} onChange={(e) => setForm({ ...form, discountPrice: e.target.value })} />
         <input className="input" placeholder="Сурет URL" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} required />
@@ -122,6 +157,7 @@ const AdminPage = () => {
           <p>
             {m.name} — {m.discountPrice ?? m.price} ₸
             {m.discountPrice ? ` (бұрын: ${m.price} ₸)` : " (стандарт)"}
+            {m.pharmacy?.name ? ` · ${m.pharmacy.name}` : ""}
           </p>
           <button type="button" className="btn btn-ghost" onClick={() => removeProduct(m.id)}>Өшіру</button>
         </article>

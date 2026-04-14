@@ -18,7 +18,7 @@ const CheckoutPage = () => {
     const { data: order } = await api.post("/api/orders/checkout", payload);
     await api.post(`/api/payments/${order.id}/simulate`);
     clearCart();
-    setMsg("Тапсырыс сәтті қабылданды");
+    setMsg("Тапсырыс қабылданды, курьерге берілді");
     setTimeout(() => navigate("/panel/orders"), 1200);
   };
 

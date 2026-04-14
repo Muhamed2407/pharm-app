@@ -35,7 +35,16 @@ const CatalogPage = () => {
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return medicines.filter((m) => {
+    const uniqueByName = [];
+    const seen = new Set();
+    for (const item of medicines) {
+      const key = String(item.name || "").trim().toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      uniqueByName.push(item);
+    }
+
+    return uniqueByName.filter((m) => {
       if (!m.name.toLowerCase().includes(q)) return false;
       if (category !== "all" && m.category !== category) return false;
       const activePrice = m.discountPrice ?? m.price;

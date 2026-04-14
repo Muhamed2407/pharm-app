@@ -102,6 +102,17 @@ const HomePage = () => (
         </div>
         <PharmaciesMap />
       </div>
+      <article className="card-elevated pharmacy-photo-card">
+        <img
+          src="https://images.unsplash.com/photo-1576602976047-174e57a47881"
+          alt="Дәріхана ішкі көрінісі"
+          className="pharmacy-photo"
+        />
+        <div className="pharmacy-photo-caption">
+          <h3>Серіктес дәріхана</h3>
+          <p>Тауарлар тексерілген қоймадан жіберіледі, сондықтан сапасы тұрақты.</p>
+        </div>
+      </article>
     </section>
 
     <section className="container section contact-section" id="байланыс">

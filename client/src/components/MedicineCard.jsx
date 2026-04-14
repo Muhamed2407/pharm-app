@@ -16,6 +16,9 @@ const MedicineCard = ({ medicine, onAdd }) => {
         {!hasDiscount && <span className="standard-badge">Стандарт баға</span>}
       </div>
       <h3 className="card-title">{medicine.name}</h3>
+      <p className="card-pharmacy">
+        {medicine.pharmacy?.name || "PharmApp дәріханасы"}
+      </p>
       <div className="card-price-row">
         {hasDiscount && <span className="price-old">{medicine.price} ₸</span>}
         <span className="price-now">{activePrice} ₸</span>
