@@ -1,0 +1,19 @@
+{
+  "name": "pharm-app",
+  "version": "1.0.0",
+  "description": "PharmApp workspace",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client -- --host\"",
+    "dev:client": "npm run dev --prefix client -- --host",
+    "dev:server": "npm run dev --prefix server",
+    "build:client": "npm run build --prefix client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
