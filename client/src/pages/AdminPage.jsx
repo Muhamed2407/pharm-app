@@ -127,6 +127,10 @@ const AdminPage = () => {
           <p className="admin-stat-label">Тапсырыс саны</p>
           <h3 className="admin-stat-value">{orders.length}</h3>
         </article>
+        <article className="card-elevated admin-stat-card">
+          <p className="admin-stat-label">Жеңілдікпен</p>
+          <h3 className="admin-stat-value">{products.filter((p) => p.discountPrice != null).length}</h3>
+        </article>
       </section>
 
       <form className="card-elevated form admin-form" onSubmit={addProduct}>

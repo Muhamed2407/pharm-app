@@ -15,7 +15,10 @@ const Navbar = () => {
   return (
     <header className="nav-wrap">
       <nav className="nav container">
-        <Link to="/" className="brand">Pharm App</Link>
+        <div className="brand-wrap">
+          <Link to="/" className="brand">Pharm App</Link>
+          <span className="live-badge">LIVE NEW</span>
+        </div>
         <div className="links">
           <NavLink to="/catalog">Каталог</NavLink>
           <Link to="/#байланыс">Байланыс</Link>

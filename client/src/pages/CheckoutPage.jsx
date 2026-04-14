@@ -8,18 +8,29 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", phone: "", address: "", paymentMethod: "kaspi" });
   const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
-    const payload = {
-      paymentMethod: form.paymentMethod === "kaspi" ? "Kaspi" : "Card",
-      deliveryAddr: form.address,
-    };
-    const { data: order } = await api.post("/api/orders/checkout", payload);
-    await api.post(`/api/payments/${order.id}/simulate`);
-    clearCart();
-    setMsg("Тапсырыс қабылданды, курьерге берілді");
-    setTimeout(() => navigate("/panel/orders"), 1200);
+    setMsg("");
+    setError("");
+    setSubmitting(true);
+    try {
+      const payload = {
+        paymentMethod: form.paymentMethod === "kaspi" ? "Kaspi" : "Card",
+        deliveryAddr: form.address,
+      };
+      const { data: order } = await api.post("/api/orders/checkout", payload);
+      await api.post(`/api/payments/${order.id}/simulate`);
+      clearCart();
+      setMsg("Тапсырыс қабылданды, курьерге берілді");
+      setTimeout(() => navigate("/panel/orders"), 1400);
+    } catch {
+      setError("Төлем орындалмады. Қайтадан басып көріңіз.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -34,9 +45,12 @@ const CheckoutPage = () => {
           <option value="kaspi">Kaspi</option>
           <option value="card">Карта</option>
         </select>
-        <button type="submit">Төлеу ({total} ₸)</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? "Өңделуде..." : `Төлеу (${total} ₸)`}
+        </button>
       </form>
       {msg && <p>{msg}</p>}
+      {error && <p className="panel-error">{error}</p>}
     </main>
   );
 };

@@ -81,6 +81,21 @@ a {
   color: transparent;
 }
 
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(120deg, #f97316, #ef4444);
+}
+
 .links {
   display: flex;
   gap: 10px;
@@ -123,6 +138,11 @@ button:not(.link-button) {
   border-radius: 14px;
   padding: 11px 18px;
   transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-primary,
