@@ -20,7 +20,7 @@ const CourierPage = () => {
     try {
       await api.patch(`/api/courier/orders/${id}`, { status });
       await load();
-      setMsg(status === "delivered" ? "Жеткізілді деп белгіленді" : "Жолда статусы қойылды");
+      setMsg(status === "DELIVERED" ? "Жеткізілді деп белгіленді" : "Жолда статусы қойылды");
     } catch {
       setMsg("Статусты өзгерту мүмкін болмады");
     }
@@ -37,31 +37,30 @@ const CourierPage = () => {
         <div className="card-elevated empty-state">Қазір тағайындалған тапсырыс жоқ</div>
       ) : (
         orders.map((o) => (
-          <article key={o._id} className="card-elevated courier-card">
+          <article key={o.id} className="card-elevated courier-card">
             <div className="courier-card-head">
               <div>
-                <p className="courier-meta">Тапсырыс № {o._id.slice(-6)}</p>
-                <h2 className="courier-total">{o.total} тг</h2>
+                <p className="courier-meta">Тапсырыс № {o.id.slice(-6)}</p>
+                <h2 className="courier-total">{o.totalAmount} ₸</h2>
                 <p className="courier-status">{orderStatusLabel(o.status)}</p>
               </div>
               <div className="courier-actions">
-                {o.status === "assigned" && (
-                  <button type="button" className="btn btn-primary" onClick={() => patchStatus(o._id, "delivering")}>
+                {o.status === "PENDING" && (
+                  <button type="button" className="btn btn-primary" onClick={() => patchStatus(o.id, "DELIVERING")}>
                     Жолға шықтым
                   </button>
                 )}
-                {(o.status === "assigned" || o.status === "delivering") && (
-                  <button type="button" className="btn btn-ghost" onClick={() => patchStatus(o._id, "delivered")}>
+                {(o.status === "PENDING" || o.status === "DELIVERING") && (
+                  <button type="button" className="btn btn-ghost" onClick={() => patchStatus(o.id, "DELIVERED")}>
                     Жеткіздім
                   </button>
                 )}
               </div>
             </div>
             <div className="courier-details">
-              <p><strong>Тұтынушы:</strong> {o.name}</p>
-              <p><strong>Телефон:</strong> {o.phone}</p>
-              <p><strong>Мекенжай:</strong> {o.address}</p>
-              <p><strong>Төлем:</strong> {o.paymentMethod === "kaspi" ? "Kaspi" : "Карта"}</p>
+              <p><strong>Тұтынушы:</strong> {o.user?.fullName || "—"}</p>
+              <p><strong>Мекенжай:</strong> {o.deliveryAddr}</p>
+              <p><strong>Төлем:</strong> {o.paymentMethod}</p>
             </div>
           </article>
         ))

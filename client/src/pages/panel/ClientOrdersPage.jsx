@@ -7,7 +7,7 @@ const ClientOrdersPage = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    api.get("/api/orders").then((res) => setOrders(res.data));
+    api.get("/api/orders/my").then((res) => setOrders(res.data));
   }, []);
 
   return (
@@ -17,15 +17,15 @@ const ClientOrdersPage = () => {
         <p className="muted">Әлі тапсырыс жоқ — <Link to="/catalog">каталогтан</Link> таңдаңыз.</p>
       ) : (
         orders.map((order) => (
-          <article key={order._id} className="order-card panel-order">
+          <article key={order.id} className="order-card panel-order">
             <div className="order-row">
-              <span className="order-sum">{order.total} тг</span>
+              <span className="order-sum">{order.totalAmount} ₸</span>
               <span className="order-pill">{orderStatusLabel(order.status)}</span>
             </div>
-            {order.courierId && (
+            {order.courier && (
               <p className="order-courier">
-                Курьер: {order.courierId.name}
-                {order.courierId.phone ? ` · ${order.courierId.phone}` : ""}
+                Курьер: {order.courier.fullName}
+                {order.courier.phone ? ` · ${order.courier.phone}` : ""}
               </p>
             )}
             <p className="order-hint">15–30 минут ішінде жеткізу (курьер тағайындалғанда)</p>

@@ -22,7 +22,7 @@ const Navbar = () => {
           <NavLink to="/cart">Себет ({items.length})</NavLink>
           {user ? (
             <>
-              {user.role === "user" && <NavLink to="/panel/orders">Клиент панелі</NavLink>}
+              {user.role === "client" && <NavLink to="/panel/orders">Клиент панелі</NavLink>}
               {user.role === "admin" && <NavLink to="/admin">Админ</NavLink>}
               {user.role === "courier" && <NavLink to="/courier">Курьер</NavLink>}
               <button type="button" onClick={onLogout} className="link-button">Шығу</button>

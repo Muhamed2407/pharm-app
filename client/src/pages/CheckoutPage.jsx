@@ -12,11 +12,11 @@ const CheckoutPage = () => {
   const submit = async (e) => {
     e.preventDefault();
     const payload = {
-      ...form,
-      items: items.map((i) => ({ medicineId: i._id, name: i.name, price: i.price, quantity: i.quantity })),
-      total,
+      paymentMethod: form.paymentMethod === "kaspi" ? "Kaspi" : "Card",
+      deliveryAddr: form.address,
     };
-    await api.post("/api/orders", payload);
+    const { data: order } = await api.post("/api/orders/checkout", payload);
+    await api.post(`/api/payments/${order.id}/simulate`);
     clearCart();
     setMsg("Тапсырыс сәтті қабылданды");
     setTimeout(() => navigate("/panel/orders"), 1200);
@@ -34,7 +34,7 @@ const CheckoutPage = () => {
           <option value="kaspi">Kaspi</option>
           <option value="card">Карта</option>
         </select>
-        <button type="submit">Төлеу ({total} тг)</button>
+        <button type="submit">Төлеу ({total} ₸)</button>
       </form>
       {msg && <p>{msg}</p>}
     </main>

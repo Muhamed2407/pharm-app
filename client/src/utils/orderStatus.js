@@ -1,12 +1,10 @@
 export const orderStatusLabel = (status) => {
-  switch (status) {
-    case "pending":
+  switch (String(status || "").toUpperCase()) {
+    case "PENDING":
       return "Күтілуде";
-    case "assigned":
-      return "Курьер тағайындалды";
-    case "delivering":
+    case "DELIVERING":
       return "Жолда";
-    case "delivered":
+    case "DELIVERED":
       return "Жеткізілді";
     default:
       return status;

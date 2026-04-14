@@ -11,22 +11,22 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (medicine) => {
     setItems((prev) => {
-      const found = prev.find((item) => item._id === medicine._id);
+      const found = prev.find((item) => item.id === medicine.id);
       if (found) {
-        return prev.map((item) => item._id === medicine._id ? { ...item, quantity: item.quantity + 1 } : item);
+        return prev.map((item) => item.id === medicine.id ? { ...item, quantity: item.quantity + 1 } : item);
       }
       return [...prev, { ...medicine, quantity: 1 }];
     });
   };
 
-  const updateQty = (_id, quantity) => {
+  const updateQty = (id, quantity) => {
     if (quantity < 1) return;
-    setItems((prev) => prev.map((item) => item._id === _id ? { ...item, quantity } : item));
+    setItems((prev) => prev.map((item) => item.id === id ? { ...item, quantity } : item));
   };
 
-  const removeFromCart = (_id) => setItems((prev) => prev.filter((item) => item._id !== _id));
+  const removeFromCart = (id) => setItems((prev) => prev.filter((item) => item.id !== id));
   const clearCart = () => setItems([]);
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + (item.discountPrice ?? item.price) * item.quantity, 0);
 
   const value = useMemo(() => ({ items, addToCart, updateQty, removeFromCart, clearCart, total }), [items, total]);
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

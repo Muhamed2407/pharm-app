@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children, adminOnly = false, courierOnly = false, user
     if (user.role === "admin") return <Navigate to="/admin" replace />;
     return <Navigate to="/panel/orders" replace />;
   }
-  if (userOnly && user.role !== "user") {
+  if (userOnly && user.role !== "client") {
     if (user.role === "admin") return <Navigate to="/admin" replace />;
     if (user.role === "courier") return <Navigate to="/courier" replace />;
     return <Navigate to="/" replace />;
