@@ -86,7 +86,7 @@ const HomePage = () => (
     <section className="container section pharmacies-section">
       <div className="section-head">
         <h2 className="section-title">Астана қаласындағы аптекалар</h2>
-        <p className="section-sub">Картада серіктес пункттердің орналасуы көрсетілген</p>
+        <p className="section-sub">Әр филиал: аудан, көше және дәріхана атауымен көрсетілген</p>
       </div>
       <div className="pharmacies-layout">
         <div className="pharmacies-list card-elevated">
@@ -95,6 +95,10 @@ const HomePage = () => (
             {astanaPharmacies.map((p) => (
               <li key={p.id}>
                 <strong>{p.name}</strong>
+                <div className="pharmacy-tags">
+                  <span className="pharmacy-tag">{p.district}</span>
+                  <span className="pharmacy-tag">{p.street}</span>
+                </div>
                 <span>{p.address}</span>
               </li>
             ))}

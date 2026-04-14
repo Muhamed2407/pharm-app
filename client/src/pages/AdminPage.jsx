@@ -112,22 +112,22 @@ const AdminPage = () => {
   };
 
   return (
-    <main className="container section page-admin">
-      <div className="section-head">
+    <main className="container section page-admin admin-theme">
+      <div className="section-head admin-head card-elevated">
         <h1 className="section-title">Админ панель</h1>
         <p className="section-sub">Дәрілерді басқару және тапсырыстар мониторингі</p>
         {demoMode && <p className="section-sub">Demo режимі: қосылған дәрілер локалды сақталады</p>}
       </div>
       <section className="admin-stats">
-        <article className="card-elevated admin-stat-card">
+        <article className="card-elevated admin-stat-card admin-stat-card-products">
           <p className="admin-stat-label">Каталогтағы дәрі</p>
           <h3 className="admin-stat-value">{products.length}</h3>
         </article>
-        <article className="card-elevated admin-stat-card">
+        <article className="card-elevated admin-stat-card admin-stat-card-orders">
           <p className="admin-stat-label">Тапсырыс саны</p>
           <h3 className="admin-stat-value">{orders.length}</h3>
         </article>
-        <article className="card-elevated admin-stat-card">
+        <article className="card-elevated admin-stat-card admin-stat-card-discount">
           <p className="admin-stat-label">Жеңілдікпен</p>
           <h3 className="admin-stat-value">{products.filter((p) => p.discountPrice != null).length}</h3>
         </article>
@@ -157,7 +157,7 @@ const AdminPage = () => {
 
       <h2 className="dash-subtitle">Дәрілер</h2>
       {products.map((m) => (
-        <article className="card-elevated cart-row" key={m.id}>
+        <article className="card-elevated cart-row admin-product-row" key={m.id}>
           <p>
             {m.name} — {m.discountPrice ?? m.price} ₸
             {m.discountPrice ? ` (бұрын: ${m.price} ₸)` : " (стандарт)"}
@@ -174,7 +174,7 @@ const AdminPage = () => {
             <div>
               <p className="courier-meta">№ {o.id.slice(-6)} · {o.user?.fullName || "Клиент"}</p>
               <p className="courier-total">{o.totalAmount} ₸</p>
-              <p>{orderStatusLabel(o.status)}</p>
+              <p className="admin-order-status">{orderStatusLabel(o.status)}</p>
               {o.courier && <p className="order-courier">Курьер: {o.courier.fullName}</p>}
             </div>
           </div>

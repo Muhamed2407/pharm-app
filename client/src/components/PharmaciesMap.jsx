@@ -29,7 +29,9 @@ const PharmaciesMap = () => {
             <Popup>
               <strong>{p.name}</strong>
               <br />
-              {p.address}
+              {p.district}
+              <br />
+              {p.street}
             </Popup>
           </Marker>
         ))}
