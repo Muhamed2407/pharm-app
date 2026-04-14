@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import api from "../api";
 import { useCart } from "../context/CartContext";
 import MedicineCard from "../components/MedicineCard";
+import { demoProducts } from "../data/demoProducts";
 
 const CatalogPage = () => {
   const [medicines, setMedicines] = useState([]);
@@ -16,7 +17,10 @@ const CatalogPage = () => {
   useEffect(() => {
     api.get("/api/products")
       .then((res) => setMedicines(res.data))
-      .catch(() => setError("Каталогты жүктеу мүмкін болмады"))
+      .catch(() => {
+        setMedicines(demoProducts);
+        setError("Сервер уақытша қолжетімсіз, демо каталог көрсетілді");
+      })
       .finally(() => setLoading(false));
   }, []);
 
