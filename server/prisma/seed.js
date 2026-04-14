@@ -36,17 +36,71 @@ async function main() {
     prisma.pharmacy.create({ data: { name: "PharmApp Есиль", address: "Кабанбай батыра 58", latitude: 51.13, longitude: 71.45 } })
   ]);
 
-  const productsData = [
-    { name: "Ибупрофен 200 мг", description: "Обезболивающее и жаропонижающее средство", category: "Обезболивающие", imageUrl: "https://images.unsplash.com/photo-1585435557343-3b092031a831", price: 1490, discountPrice: 1190, inStock: true, isPromo: true, isBestSeller: true, pharmacyId: pharmacies[0].id },
-    { name: "Витамин D3", description: "Поддержка иммунитета и костной системы", category: "Витамины", imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88", price: 3990, discountPrice: 3290, inStock: true, isPromo: true, isBestSeller: true, pharmacyId: pharmacies[1].id },
-    { name: "Омега-3", description: "Для сердца и сосудов", category: "БАД", imageUrl: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2", price: 5890, inStock: true, isPromo: false, isBestSeller: false, pharmacyId: pharmacies[2].id },
-    { name: "Парацетамол", description: "Снижение температуры и боли", category: "Обезболивающие", imageUrl: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de", price: 990, inStock: true, isPromo: false, isBestSeller: true, pharmacyId: pharmacies[0].id }
+  const categories = [
+    "Обезболивающие",
+    "Витамины",
+    "БАД",
+    "Антибиотики",
+    "Сердце",
+    "Давление",
+    "Желудок",
+    "Аллергия",
+    "Кашель",
+    "Горло",
+    "Диабет",
+    "Кожа"
+  ];
+  const baseNames = [
+    "Парацетамол",
+    "Ибупрофен",
+    "Нурофен",
+    "Аспирин",
+    "Омепразол",
+    "Супрастин",
+    "Цитрамон",
+    "Амоксициллин",
+    "Азитромицин",
+    "Колдрекс",
+    "Терафлю",
+    "Витамин C",
+    "Витамин D3",
+    "Магний B6",
+    "Омега-3",
+    "Пантенол",
+    "Смекта",
+    "Лоперамид",
+    "Лоратадин",
+    "Эналаприл"
+  ];
+  const imagePool = [
+    "https://images.unsplash.com/photo-1585435557343-3b092031a831",
+    "https://images.unsplash.com/photo-1587854692152-cbe660dbde88",
+    "https://images.unsplash.com/photo-1471864190281-a93a3070b6de",
+    "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2",
+    "https://images.unsplash.com/photo-1626716493137-b67fe9501e76"
   ];
 
-  const products = [];
-  for (const product of productsData) {
-    products.push(await prisma.product.create({ data: product }));
-  }
+  const productsData = Array.from({ length: 500 }, (_, i) => {
+    const index = i + 1;
+    const price = 700 + ((index * 137) % 18000);
+    const hasDiscount = index % 3 !== 0;
+    const discountPrice = hasDiscount ? Math.max(500, Math.round(price * (0.72 + (index % 10) * 0.02))) : null;
+    return {
+      name: `${baseNames[i % baseNames.length]} ${100 + (index % 900)} мг`,
+      description: "Сертифицированный препарат для ежедневного применения",
+      category: categories[i % categories.length],
+      imageUrl: imagePool[i % imagePool.length],
+      price,
+      discountPrice,
+      inStock: true,
+      isPromo: Boolean(discountPrice),
+      isBestSeller: index % 5 === 0,
+      pharmacyId: pharmacies[i % pharmacies.length].id
+    };
+  });
+
+  await prisma.product.createMany({ data: productsData });
+  const products = await prisma.product.findMany({ orderBy: { createdAt: "asc" } });
 
   await prisma.review.createMany({
     data: [

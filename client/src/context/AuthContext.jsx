@@ -40,15 +40,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    const normalizedEmail = String(email || "").trim().toLowerCase();
+    const normalizedPassword = String(password || "").trim();
     try {
-      const { data } = await api.post("/api/auth/login", { email, password });
+      const { data } = await api.post("/api/auth/login", { email: normalizedEmail, password: normalizedPassword });
       localStorage.removeItem(DEMO_USER_KEY);
       localStorage.setItem("pharm_token", data.token);
       const normalized = normalizeUser(data.user);
       setUser(normalized);
       return normalized;
     } catch {
-      const demo = DEMO_USERS.find((entry) => entry.email === email && entry.password === password);
+      const demo = DEMO_USERS.find((entry) => entry.email === normalizedEmail && entry.password === normalizedPassword);
       if (!demo) throw new Error("login-failed");
       localStorage.removeItem("pharm_token");
       localStorage.setItem(DEMO_USER_KEY, JSON.stringify(demo));
